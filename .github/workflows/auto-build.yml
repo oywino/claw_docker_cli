@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Debug (list repo root)
         run: |
           pwd
@@ -20,7 +20,7 @@ jobs:
 
       - name: Get latest OpenClaw release tag
         id: ver
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -29,15 +29,15 @@ jobs:
             core.setOutput("tag", tag);
             core.info(`Latest upstream tag: ${tag}`);
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v7
         with:
           context: ${{ github.workspace }}
           file: ${{ github.workspace }}/Dockerfile
