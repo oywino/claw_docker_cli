@@ -42,17 +42,22 @@ The intent is that the wrapper tag mirrors the upstream OpenClaw version tag.
 
 For Øyvind's deployment, only stable OpenClaw releases should be used.
 
-Ignore tags containing prerelease/build-channel words such as:
+Ignore prerelease tags and non-default image variants.
+
+Prerelease/channel identifiers to ignore include:
 
 - `beta`
 - `alpha`
 - `rc`
 - `nightly`
 - `dev`
-- `browser`
 - other prerelease identifiers
 
-The local deployment should be updated manually by editing the compose image line after a stable tag has been confirmed.
+Non-default image variants to ignore for this deployment include:
+
+- `browser`
+
+The local deployment should be updated manually by editing the compose image line after a stable default tag has been confirmed.
 
 ## Local docker-compose usage
 
@@ -89,7 +94,7 @@ Purpose:
   ```
 
 - Tell Øyvind the exact compose line to use manually.
-- Avoid recommending beta/prerelease/browser/dev tags.
+- Avoid recommending beta/prerelease/dev tags or non-default variants such as browser.
 
 Current confirmed deployment baseline:
 
@@ -116,7 +121,7 @@ This is the redacted/reusable cron configuration. Delivery target details are in
   "payload": {
     "kind": "agentTurn",
     "timeoutSeconds": 600,
-    "message": "Weekly reminder/check: check whether a newer STABLE OpenClaw Gateway Docker image version is available for Øyvind to manually put into docker-compose. Current confirmed compose baseline from Øyvind is `ghcr.io/oywino/openclaw-gateway-dockercli:2026.6.9`. IMPORTANT: ignore beta/alpha/rc/nightly/dev/browser/prerelease tags; only stable releases matter. Do not update anything automatically.\n\nTask:\n1) Determine the currently configured/running image tag if possible. If Docker socket access is permission-denied, do not treat that as failure; use the confirmed baseline `2026.6.9`.\n2) Check official OpenClaw stable release/container tags from authoritative sources, preferably GitHub releases/packages for `openclaw/openclaw` and/or `ghcr.io/openclaw/openclaw`. Also check whether `ghcr.io/oywino/openclaw-gateway-dockercli:<tag>` has a matching stable tag before recommending that exact custom image tag.\n3) Compare semantic/calendar-style version tags. Exclude prereleases/betas. If a newer stable version than the current baseline exists, send a short summary with the current tag, newest stable OpenClaw version found, and exact compose image line to use. Prefer `ghcr.io/oywino/openclaw-gateway-dockercli:<version>` only if that custom tag exists; otherwise say the custom tag was not found and identify the official stable tag/source.\n4) If no newer stable version exists, send a brief OK summary with current tag and newest stable tag checked.\n5) If sources are unreachable or ambiguous, say that clearly and do not recommend a beta/prerelease.\n\nKeep output concise. This is only a notification/check job, not an updater."
+    "message": "Weekly reminder/check: check whether a newer STABLE default OpenClaw Gateway Docker image version is available for Øyvind to manually put into docker-compose. Current confirmed compose baseline from Øyvind is `ghcr.io/oywino/openclaw-gateway-dockercli:2026.6.9`. IMPORTANT: ignore prereleases such as beta/alpha/rc/nightly/dev, and ignore non-default image variants such as browser; only stable default releases matter. Do not update anything automatically.\n\nTask:\n1) Determine the currently configured/running image tag if possible. If Docker socket access is permission-denied, do not treat that as failure; use the confirmed baseline `2026.6.9`.\n2) Check official OpenClaw stable default release/container tags from authoritative sources, preferably GitHub releases/packages for `openclaw/openclaw` and/or `ghcr.io/openclaw/openclaw`. Also check whether `ghcr.io/oywino/openclaw-gateway-dockercli:<tag>` has a matching stable default tag before recommending that exact custom image tag.\n3) Compare semantic/calendar-style version tags. Exclude prereleases and non-default image variants. If a newer stable default version than the current baseline exists, send a short summary with the current tag, newest stable default OpenClaw version found, and exact compose image line to use. Prefer `ghcr.io/oywino/openclaw-gateway-dockercli:<version>` only if that custom tag exists; otherwise say the custom tag was not found and identify the official stable default tag/source.\n4) If no newer stable default version exists, send a brief OK summary with current tag and newest stable default tag checked.\n5) If sources are unreachable or ambiguous, say that clearly and do not recommend a beta/prerelease or non-default variant.\n\nKeep output concise. This is only a notification/check job, not an updater."
   },
   "delivery": {
     "mode": "announce",
